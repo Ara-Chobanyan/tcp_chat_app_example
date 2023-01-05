@@ -3,6 +3,7 @@
 #include <server/tcp_server.hpp>
 
 namespace CHAT {
+
 using boost::asio::ip::tcp;
 TcpServer::TcpServer(IPV ipv, int port)
   : m_ipVersion(ipv), m_port(port),

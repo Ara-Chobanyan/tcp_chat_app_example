@@ -66,7 +66,7 @@ void TcpConnection::asyncWrite()
 };
 
 void TcpConnection::onWrite(boost::system::error_code errorCode,
-  size_t bytesTransferred)
+  size_t /*bytesTransferred*/)
 {
   if (errorCode) {
     m_socket.close(errorCode);
@@ -79,4 +79,5 @@ void TcpConnection::onWrite(boost::system::error_code errorCode,
 
   if (!m_outgoingMessages.empty()) { asyncWrite(); }
 };
+
 }// namespace CHAT
