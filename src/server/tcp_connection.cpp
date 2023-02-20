@@ -3,6 +3,7 @@
 
 namespace CHAT {
 
+//---------------------------------------------------------------------------
 TcpConnection::TcpConnection(io::ip::tcp::socket&& socket)
   : m_socket(std::move(socket))
 {
@@ -12,6 +13,7 @@ TcpConnection::TcpConnection(io::ip::tcp::socket&& socket)
   m_userName = name.str();
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::start(messageHandler&& messageHandler,
   errorHandler&& errorHandler)
 {
@@ -21,6 +23,7 @@ void TcpConnection::start(messageHandler&& messageHandler,
   asyncRead();
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::post(const std::string& message)
 {
   bool queueIdle = m_outgoingMessages.empty();
@@ -29,6 +32,7 @@ void TcpConnection::post(const std::string& message)
   if (queueIdle) { asyncWrite(); }
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::asyncRead()
 {
   io::async_read_until(m_socket,
@@ -38,6 +42,7 @@ void TcpConnection::asyncRead()
       size_t bytesTransferred) { self->onRead(errorCode, bytesTransferred); });
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::onRead(boost::system::error_code errorCode,
   size_t bytesTransferred)
 {
@@ -57,6 +62,7 @@ void TcpConnection::onRead(boost::system::error_code errorCode,
   asyncRead();
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::asyncWrite()
 {
   io::async_write(m_socket,
@@ -65,6 +71,7 @@ void TcpConnection::asyncWrite()
       size_t bytesTransferred) { self->onWrite(errorCode, bytesTransferred); });
 };
 
+//---------------------------------------------------------------------------
 void TcpConnection::onWrite(boost::system::error_code errorCode,
   size_t /*bytesTransferred*/)
 {
@@ -80,4 +87,5 @@ void TcpConnection::onWrite(boost::system::error_code errorCode,
   if (!m_outgoingMessages.empty()) { asyncWrite(); }
 };
 
+//---------------------------------------------------------------------------
 }// namespace CHAT

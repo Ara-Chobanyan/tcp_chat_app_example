@@ -5,11 +5,13 @@
 namespace CHAT {
 
 using boost::asio::ip::tcp;
+//---------------------------------------------------------------------------
 TcpServer::TcpServer(IPV ipv, int port)
   : m_ipVersion(ipv), m_port(port),
     m_acceptor(m_ioContext,
       tcp::endpoint(m_ipVersion == IPV::V4 ? tcp::v4() : tcp::v6(), m_port)){};
 
+//---------------------------------------------------------------------------
 int TcpServer::run()
 {
   try {
@@ -22,11 +24,13 @@ int TcpServer::run()
   return 0;
 };
 
+//---------------------------------------------------------------------------
 void TcpServer::broadCast(const std::string& message)
 {
   for (const auto& connection : m_connections) { connection->post(message); }
 };
 
+//---------------------------------------------------------------------------
 void TcpServer::startAccept()
 {
   m_socket.emplace(m_ioContext);
@@ -55,4 +59,5 @@ void TcpServer::startAccept()
     });
 }
 
+//---------------------------------------------------------------------------
 }// namespace CHAT

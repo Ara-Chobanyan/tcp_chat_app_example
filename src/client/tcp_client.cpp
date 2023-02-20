@@ -2,6 +2,7 @@
 
 namespace CHAT {
 
+//---------------------------------------------------------------------------
 TcpClient::TcpClient(const std::string& address, int port)
   : m_socket(m_ioContext)
 {
@@ -10,6 +11,7 @@ TcpClient::TcpClient(const std::string& address, int port)
   m_endPoints = resolve.resolve(address, std::to_string(port));
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::run()
 {
   io::async_connect(m_socket,
@@ -22,6 +24,7 @@ void TcpClient::run()
   m_ioContext.run();
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::stop()
 {
   boost::system::error_code errorCode;
@@ -32,6 +35,7 @@ void TcpClient::stop()
   }
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::post(const std::string& message)
 {
   bool queueIdle = m_outGoingMessage.empty();
@@ -40,6 +44,7 @@ void TcpClient::post(const std::string& message)
   if (queueIdle) { asyncWrite(); }
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::asyncRead()
 {
   io::async_read_until(m_socket,
@@ -50,6 +55,7 @@ void TcpClient::asyncRead()
     });
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::onRead(boost::system::error_code errorCode,
   size_t /*bytesTransferred*/)
 {
@@ -64,6 +70,7 @@ void TcpClient::onRead(boost::system::error_code errorCode,
   asyncRead();
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::asyncWrite()
 {
   io::async_write(m_socket,
@@ -73,6 +80,7 @@ void TcpClient::asyncWrite()
     });
 };
 
+//---------------------------------------------------------------------------
 void TcpClient::onWrite(boost::system::error_code errorCode,
   size_t /*bytesTransferred*/)
 {
@@ -86,4 +94,5 @@ void TcpClient::onWrite(boost::system::error_code errorCode,
   if (!m_outGoingMessage.empty()) { asyncWrite(); }
 };
 
+//---------------------------------------------------------------------------
 }// namespace CHAT
